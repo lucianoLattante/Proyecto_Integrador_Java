@@ -13,7 +13,7 @@ Implementation: [Practica.java](src/integrador/Practica.java).
 | Method | Intended behavior from source comments | Current limitations |
 | --- | --- | --- |
 | `numeroCapicua(Integer)` | Check a decimal palindrome; null returns false and negative inputs are considered | Reversal uses an int; overflow behavior needs explicit tests |
-| `prisioneroDulce(int,int,int)` | Find the zero-based recipient of the last candy in a circular distribution | Wraparound defect reproduced; invalid ranges are not validated |
+| `prisioneroDulce(int,int,int)` | Find the zero-based recipient of the last candy in a circular distribution | Wraparound fixed; the circle, count and zero-based start are validated |
 | `mediasAmigas(List<String>)` | Return sorted, distinct values appearing at least twice; null list returns empty | Quadratic scan; null elements are not handled |
 
 [Integrador.java](src/integrador/Integrador.java) is a small main program that prints the result of one palindrome example. It is not a complete interactive interface.
@@ -43,15 +43,8 @@ java -cp "out;$testDeps" org.junit.runner.JUnitCore tests.EggTest
 
 **Executed on 2026-11-16:** Oracle JDK 1.8.0_202, JUnit 4.13.2 and Hamcrest Core 1.3; all three existing tests passed. Compilation emitted unchecked-operation warnings. Dependencies were available locally; no external services were called.
 
-Passing the existing suite does not establish correctness for all inputs. A separate isolated probe reproduced this defect:
+The historical probe reproduced an out-of-range result for `prisioneroDulce(0, 4, 3)`. The fix returns `0`. Regression cases cover a full lap, crossing the final position, invalid ranges and integer overflow. The last-index calculation uses a `long` sum and modulo before casting back to `int`.
 
-```text
-prisioneroDulce(0, 4, 3)
-Expected zero-based recipient: 0
-Actual result: 3
-```
-
-That probe demonstrates a known failure; it is not an additional passing correctness test. The implementation is unchanged by this documentation PR.
 
 ## NetBeans / Ant
 
@@ -61,7 +54,6 @@ The repository also tracks generated build outputs and IDE-private metadata. The
 
 ## Proposed next improvements
 
-1. Add a regression test for wraparound and define valid ranges before correcting `prisioneroDulce`.
 2. Specify overflow and null-element contracts.
 3. Replace the nested counting loop with a frequency map if revisiting the exercise.
 4. Make the build portable and exclude regenerated outputs.
