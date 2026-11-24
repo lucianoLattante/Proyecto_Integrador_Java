@@ -64,26 +64,10 @@ public class Practica {
 //     @return ladronQueLeTocoElCarameloPodrido
      
     public int prisioneroDulce(int inicio, int cantidadCaramelos, int cantidadLadrones) {
-        int repartirCaramelos=1,contador=inicio;
-        
-        int[] ladrones=new int[cantidadLadrones];
-        
-        if (cantidadLadrones==1){
-            // Retorna 0 porque es la unica posicion que existe
-            return 0;
+        if (cantidadLadrones <= 0 || cantidadCaramelos <= 0 || inicio < 0 || inicio >= cantidadLadrones) {
+            throw new IllegalArgumentException("La ronda, los caramelos y la posición inicial deben ser válidos");
         }
-        
-        for (int i=0;i<cantidadCaramelos-1;i++){
-            if (contador==ladrones.length){
-                contador=0;
-            }
-            
-            ladrones[contador]=ladrones[contador]+repartirCaramelos;
-            
-            contador++;
-        }
-        
-        return contador;
+        return (int) (((long) inicio + cantidadCaramelos - 1) % cantidadLadrones);
     }
 
 //    En un universo paralelo, donde los habitantes son medias, existe un crucero de medias donde se sube una lista de medias. 

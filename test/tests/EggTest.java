@@ -24,6 +24,32 @@ public class EggTest {
     }
 
     @Test
+    public void prisioneroDulceWrapsAtTheEndOfTheCircle() {
+        assertEquals(0, pr.prisioneroDulce(0, 7, 6));
+        assertEquals(0, pr.prisioneroDulce(5, 2, 6));
+        assertEquals(2, pr.prisioneroDulce(3, 6, 6));
+        assertEquals(Integer.MAX_VALUE - 2,
+                pr.prisioneroDulce(Integer.MAX_VALUE - 1, Integer.MAX_VALUE, Integer.MAX_VALUE));
+    }
+
+    @Test
+    public void prisioneroDulceRejectsInvalidRounds() {
+        invalida(-1, 1, 6);
+        invalida(6, 1, 6);
+        invalida(0, 0, 6);
+        invalida(0, 1, 0);
+    }
+
+    private void invalida(int inicio, int caramelos, int ladrones) {
+        try {
+            pr.prisioneroDulce(inicio, caramelos, ladrones);
+            org.junit.Assert.fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException expected) {
+            // Invalid input has no final recipient.
+        }
+    }
+
+    @Test
     public void mediasAmigasTest() {
 
         ArrayList<String> medias = new ArrayList(Arrays.asList(new String[]{"A", "B", "C", "D", "A", "C", "D", "A"}));
